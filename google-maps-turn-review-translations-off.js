@@ -1,0 +1,43 @@
+// ==UserScript==
+// @name        Google Maps Review Turn Translations Off
+// @namespace   Violentmonkey Scripts
+// @match       https://www.google.com/maps/*
+// @grant       none
+// @version     1.0
+// @author      mbalc
+// @inject-into auto
+// @description Auto-disables translations in Google Maps reviews
+//
+// ... so you don't have to click all those "See original" buttons yourself :v
+//
+// Tested on 2025-03-05 in Firefox(floorp) on OpenSUSE Tumbleweed
+// ==/UserScript==
+
+(function () {
+  "use strict";
+
+  // Watch for DOM changes since Google Maps loads content dynamically
+  const observer = new MutationObserver(() => {
+    // Try to find and click the review toggle button
+    try {
+      const elements = document.querySelectorAll(
+        'button[role="switch"]' +
+          '[aria-checked="true"]' +
+          "[aria-controls]" +
+          "[data-review-id]" +
+          "[jsaction]" +
+          "[jslog]"
+      );
+      console.log(elements);
+      elements.forEach((e) => e.click());
+    } catch (e) {
+      // Silently fail if element is not found
+    }
+  });
+
+  // Start observing the entire document for changes
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+})();
