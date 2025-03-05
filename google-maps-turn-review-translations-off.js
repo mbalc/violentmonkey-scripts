@@ -22,7 +22,6 @@
 // Tags: googlemaps, reviews, translation, disable-translation, auto-click, userscript, violentmonkey, original-language, see-original, maps-reviews
 // ==/UserScript==
 
-
 (function () {
   "use strict";
 
@@ -36,10 +35,13 @@
           "[aria-controls]" +
           "[data-review-id]" +
           "[jsaction]" +
-          "[jslog]"
+          "[jslog]" +
+          ":not([data-translation-clicked])"
       );
-      console.log(elements);
-      elements.forEach((e) => e.click());
+      elements.forEach((e) => {
+        e.click();
+        e.setAttribute("data-translation-clicked", "true");
+      });
     } catch (e) {
       // Silently fail if element is not found
     }
